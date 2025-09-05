@@ -1,0 +1,151 @@
+import java.util.Scanner;
+
+public class Main
+{
+	public static void main(String[] args)
+	{
+	    
+		Vetor vetor = new Vetor(10);
+		
+    vetor.adicionar("Elemento 1");
+		vetor.adicionar("Elemento 2");	
+		vetor.adicionar("Elemento 3");	
+        
+        System.out.println("O tamanho real do vetor é: " + vetor.tamanho());
+
+        System.out.println(vetor.toString());
+        
+        System.out.println("Elemento de busca: "+vetor.busca(1));
+
+        System.out.println(vetor.buscaSequencial("Elemento 4"));
+
+        
+        System.out.println(vetor);
+        
+        vetor.adicionarPosicao(1,"Elemento Adicionado na posição 1");	
+        
+        System.out.println(vetor);
+
+	}
+}
+
+
+
+class Vetor //Classe
+{
+    public String [] elementos; //Declaração do vetor "elementos" do tipo String
+    public int tamanho; //Atributo que acompanha o tamanho do vetor
+    
+    //Construtor que recebe a capacidade de elementos que eu quero criar
+    public Vetor(int capacidade)
+    {
+        this.elementos = new String[capacidade]; //Criar com a capacidade que for passada para o vetor
+        this.tamanho = 0; //o tamanho é iniciliazdo com 0 e depois quando for adicionando ele irá ser incrementado
+    }
+    
+        
+    public boolean adicionar(String elemento)
+    {
+        if(this.tamanho < this.elementos.length)
+        {
+            this.elementos[this.tamanho] = elemento; //Depois que adicionar o elemento no vetor é incrementado 1 no tamanho
+            this.tamanho++;     //Verifica o tamanho real do vetor
+            return true;
+        }
+           
+        return false;
+    }
+    
+    //Adicionar elemento na posição desejada
+    //0 1 2 3 4 5 6 = tamanho 5
+    //B C E F G + +
+    public boolean adicionarPosicao(int posicao, String elemento)
+    {
+        if(!(posicao >= 0 && posicao <= tamanho)) // o "!" significa negado, tem o range de todas as posições n podem ser acessadas
+        {
+         throw new IllegalArgumentException("Posição inválida"); //Exceção especial para tipos de argumentos que são inválidos
+        }
+        
+        //mover todos os elementos
+        for(int i = this.tamanho -1; i >= posicao; i--)//Está iterando o vetor de trás para frente, na primeira passada do for o i vale 4
+        //irá executar o bloco de código onde o vetor da posição [4+1] vai receber o valor 4 que é do i
+        {
+            this.elementos[i+1] = this.elementos[i]; //A posição precisa ser maior que i para mover  
+        }
+        
+        //atribuindo o elemento da posição
+        this.elementos[posicao] = elemento;
+        this.tamanho ++;
+     
+        return true;
+     
+    }
+    
+    
+    
+    
+    //buscar a posição do elemento
+    public String busca(int posicao)
+    {
+     if(!(posicao >= 0 && posicao < tamanho)) // o "!" significa negado, tem o range de todas as posições n podem ser acessadas
+     {
+         throw new IllegalArgumentException("Posição inválida");
+         //Exceção especial para tipos de argumentos que são inválidos
+     }
+     
+     return this.elementos[posicao];
+    }
+    
+    
+    //Busca sequencial, verificar se  o elemento existe no vetor
+    public int buscaSequencial(String elemento)
+    {
+        for(int i=0; i < this.tamanho;i++)
+        {                                           //É utilizado o método equals
+            if(this.elementos[i].equals(elemento)) //No Java não existe comparação de string com == 
+            {
+                return i;
+            }
+        }
+        return -1; //Uma posição que não existe
+    }
+    
+    
+    //Imprimir o tamanho
+    public int tamanho()
+    {
+        return this.tamanho;
+        
+    }
+    
+    //Imprimir todos os elementos do array
+    public String toString()
+    {
+         //Classe específica e apropriada do java para strings
+        StringBuilder s = new StringBuilder();
+        s.append("[ ");
+
+         for (int i = 0; i < this.tamanho; i++)
+        {
+            s.append(this.elementos[i]);
+        
+        if (i < this.tamanho - 1)
+        {
+            s.append(", ");
+        }
+    }
+
+        s.append(" ]");
+        return s.toString();
+        
+        
+     /*
+        append() método Java das classes StringBuilder
+        que acrescenta algum valor a uma sequência atual
+    */
+
+    }
+    
+    
+}
+
