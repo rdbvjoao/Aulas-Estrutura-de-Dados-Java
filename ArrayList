@@ -1,0 +1,80 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Main
+{
+	public static void main(String[] args)
+	{
+
+        //o <> é a entidade/tipo da classe que vai ser instanciada
+        ArrayList<String> arrayList = new ArrayList<String>();
+        
+        arrayList.add("A");
+        arrayList.add("B");
+        arrayList.add("C");
+        arrayList.add("D");
+
+        System.out.println(arrayList);
+        
+        //Método para adicionar na posição .add(index, element)
+        arrayList.add(0,"Adicionado");
+
+        System.out.println(arrayList);
+
+	        
+	   //Método de buscar elemento
+	   arrayList.contains("A");
+	   boolean existeElemento = arrayList.contains("B");
+	   
+	   if(existeElemento)
+	   {    
+	       System.out.println("Elemento existe no array");
+	   }
+	    else
+	    {
+	       System.out.println("Elemento não existe no array");
+	    }
+
+
+        //Método indexOf retorna exatamente o indice do objeto que se busca
+        int posicao = arrayList.indexOf("L");
+        if(posicao> -1)
+        {
+            System.out.println("Elemento existe no array! " + posicao);
+        }
+	    
+        else 
+        {
+            System.out.println("Elemento não existe no array! " + posicao);
+        }	    
+	
+	
+	   //Método de buscar pela posição
+	   //arrayList.get(index))
+	   System.out.println(arrayList.get(2));
+	   
+	   
+	   //Método para remover Elemento passando indice
+	   arrayList.remove(0);
+	   
+	   //Método para remover Elemento passando o objetov
+       arrayList.remove("Adicionado"); 
+       
+       
+       System.out.println(arrayList);
+	    
+	    
+	   //Método para ver o tamanho do array
+	   //arrayList.size();
+       System.out.println(arrayList.size());
+
+	    
+	}
+}
+
+/*
+Classe ArrayList que é a classe nativa do java
+Similar ao que foi implementado durante o curso
+Pertence ao pacote java.util
+
+*/
