@@ -1,0 +1,208 @@
+public class Main
+{
+	public static void main(String[] args) 
+	{
+        Fila<Integer> fila = new Fila<Integer>(); 
+        
+
+        fila.enfileirar(16);
+        fila.enfileirar(8);
+        fila.enfileirar(9);
+
+        System.out.println("Fila vazia? "+ fila.estaVazia());
+        System.out.println("Tamanho da fila: "+fila.tamanho());
+        
+        System.out.println(fila.toString());
+        
+        System.out.println(fila.espiar());//Espiando o inicio da fila
+        
+        fila.desenfileirar();
+        System.out.println(fila.toString());
+	}
+}
+
+
+public class Fila<T> extends EstruturaEstatica<T>
+{
+    public Fila()
+    {
+        super(); //Chamando o construtor da classe mãe
+    }
+    
+    public Fila(int capacidade)
+    {
+        super(capacidade);
+    }
+    
+    public void enfileirar(T elemento)
+    {
+        aumentaCapacidade();
+        
+        this.elementos[this.tamanho] = elemento;
+        this.tamanho++;
+    }
+    
+    public T desenfileirar()
+    {
+        final int pos = 0; //O "final" é uma constante
+        //Para que não seja preciso sempre passar o elemento a ser removido
+        
+        if(estaVazia())
+        {
+            System.out.println("Fila vazia. Impossível de remover!");
+            return null;
+        }
+        
+        T elementoRemovido = this.elementos[pos];
+        
+        this.remover(pos);
+        
+        return elementoRemovido;
+        
+    }
+    
+    public T espiar()
+    {
+        if(this.estaVazia())
+        {
+            return null;
+        }
+        return this.elementos[0];
+    }
+}
+
+
+class EstruturaEstatica<T>
+{
+    
+    protected T[] elementos;
+    protected int tamanho;
+    
+    public EstruturaEstatica(int capacidade)
+    {
+        this.elementos = (T[]) new Object[capacidade];
+        this.tamanho = 0;
+        
+    }
+    
+    public EstruturaEstatica()
+    {
+        this(10);    
+    }
+          
+            
+    protected boolean adicionar(T elemento)
+    {
+        this.aumentaCapacidade();
+        
+        if(this.tamanho < this.elementos.length)
+        {
+            this.elementos[this.tamanho] = elemento;//Depois que adicionar o elemento no vetor é incrementado 1 no tamanho
+            this.tamanho++; 
+            return true;
+        }
+           
+        return false;
+    }
+    
+    
+    protected boolean adicionar(int posicao, T elemento)
+    {
+        if(!(posicao >= 0 && posicao <= tamanho)) // o "!" significa negado, tem o range de todas as posições n podem ser acessadas
+        {
+         throw new IllegalArgumentException("Posição inválida"); //Exceção especial para tipos de argumentos que são inválidos
+        }
+        
+        this.aumentaCapacidade();//Caso a capacidade estoure
+        
+        //mover todos os elementos
+        for(int i = this.tamanho -1; i >= posicao; i--)//Está iterando o vetor de trás para frente, na primeira passada do for o i vale 4
+        //irá executar o bloco de código onde o vetor da posição [4+1] vai receber o valor 4 que é do i
+        {
+            this.elementos[i+1] = this.elementos[i]; //A posição precisa ser maior que i para mover  
+        }
+        
+        //atribuindo o elemento da posição
+        this.elementos[posicao] = elemento;
+        this.tamanho ++;
+     
+        return true;
+     
+    }
+    
+    
+    protected void remover(int posicao)
+    {
+       if(!(posicao >= 0 && posicao < tamanho))  
+       {
+         throw new IllegalArgumentException("Posição inválida");
+       }  
+            for( int i = posicao; i< this.tamanho-1;i++)
+            {
+                this.elementos[i] = this.elementos[i+1];
+            }
+        
+            this.tamanho--;
+    }
+    
+    
+    
+    protected void aumentaCapacidade()
+    {
+        //quando o tamanho do vetor for igual ao length do vetor
+        if(this.tamanho == this.elementos.length)
+        {
+        //declarando e instanciando um vetor do mesmo tipo
+        //passando a capacidade do vetor vezes 2
+        T[] elementosNovos =  (T[]) new Object[this.elementos.length*2];
+        
+            for(int i = 0; i<this.elementos.length;i++)//Iterando vetor que está sem capacidade
+            {
+                elementosNovos[i] = this.elementos[i]; //A posição i recebe o que está em elementos de i
+            }
+            
+            this.elementos = elementosNovos; //Atribundo o elementos ao vetor novo
+        }
+    }
+    
+    
+    
+    //Imprimir o tamanho
+    public int tamanho()
+    {
+        return this.tamanho;
+        
+    }
+    
+    
+    //Imprimir todos os elementos do array
+    public String toString()
+    {
+         //Classe específica e apropriada do java para strings
+        StringBuilder s = new StringBuilder();
+        s.append("[ ");
+
+         for (int i = 0; i < this.tamanho; i++)
+        {
+            s.append(this.elementos[i]);
+        
+            if (i < this.tamanho - 1)
+            {
+            s.append(", ");
+            }
+            
+        }
+        
+        s.append(" ]");
+        return s.toString();
+    }
+    
+    public boolean estaVazia()
+    {
+        return this.tamanho == 0;
+    }
+    
+    
+    
+}
+
