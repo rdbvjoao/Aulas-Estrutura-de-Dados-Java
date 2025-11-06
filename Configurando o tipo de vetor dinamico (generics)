@@ -1,0 +1,203 @@
+public class Main
+{
+	public static void main(String[] args)
+	{
+        Lista<String> vetor = new Lista<String>(1);
+        
+        vetor.adicionar("Elemento");
+        //vetor.adicionar (1); Irá dar erro, pq a lista é generica está como string
+    }
+}
+
+
+// <T> o T significa o class type
+class Lista<T> //Classe genérica ao colocar o "<>". Operador diamond <>
+{
+    //Vetor declarado do tipo Generics, onde na declaração do Vetor
+    //Eu posso passar qual tipo de classe eu quero que o vetor trabalhe
+    
+    
+    public T[] elementos; //Colocando "T" do tipo  dinâmico
+    public int tamanho; 
+    
+    //Construtor que recebe a capacidade de elementos que eu quero criar
+    //Instanciando de forma generica sem o reflection
+    public Lista(int capacidade)
+    {
+        this.elementos = (T[])new Object[capacidade]; //Criar com a capacidade que for passada para o vetor
+        this.tamanho = 0; //o tamanho é iniciliazdo com 0 e depois quando for adicionando ele irá ser incrementado
+    }
+    
+    /*Construtor passando e instanciando um vetor generico
+    //Chamado de reflection
+    public Lista(int capacidade, Class <T> tipoClasse)
+    {
+        this.elementos = (T[])Array.newInstance(tipoClasse, capacidade);
+        this.tamanho = 0;
+    }*/
+    
+        
+    public boolean adicionar(T elemento)
+    {
+        this.aumentaCapacidade();
+        
+        if(this.tamanho < this.elementos.length)
+        {
+            this.elementos[this.tamanho] = elemento; //Depois que adicionar o elemento no vetor é incrementado 1 no tamanho
+            this.tamanho++;     //Verifica o tamanho real do vetor
+            return true;
+        }
+           
+        return false;
+    }
+    
+    
+    //Adicionar elemento na posição desejada. Fazendo overloading do método adicionar
+    //0 1 2 3 4 5 6 = tamanho 5
+    //B C E F G + +
+    public boolean adicionar(int posicao, T elemento)
+    {
+        if(!(posicao >= 0 && posicao <= tamanho)) // o "!" significa negado, tem o range de todas as posições n podem ser acessadas
+        {
+         throw new IllegalArgumentException("Posição inválida"); //Exceção especial para tipos de argumentos que são inválidos
+        }
+        
+        this.aumentaCapacidade();//Caso a capacidade estoure
+        
+        //mover todos os elementos
+        for(int i = this.tamanho -1; i >= posicao; i--)//Está iterando o vetor de trás para frente, na primeira passada do for o i vale 4
+        //irá executar o bloco de código onde o vetor da posição [4+1] vai receber o valor 4 que é do i
+        {
+            this.elementos[i+1] = this.elementos[i]; //A posição precisa ser maior que i para mover  
+        }
+        
+        //atribuindo o elemento da posição
+        this.elementos[posicao] = elemento;
+        this.tamanho ++;
+     
+        return true;
+     
+    }
+    
+    //Private porque só irá ser utilizado internamente da classe
+    //não é preciso passar parametros
+    private void aumentaCapacidade()
+    {
+        //quando o tamanho do vetor for igual ao length do vetor
+        if(this.tamanho == this.elementos.length)
+        {
+        //declarando e instanciando um vetor do mesmo tipo
+        //passando a capacidade do vetor vezes 2
+        T[] elementosNovos =  (T[]) new Object[this.elementos.length*2];
+        
+            for(int i = 0; i<this.elementos.length;i++)//Iterando vetor que está sem capacidade
+            {
+                elementosNovos[i] = this.elementos[i]; //A posição i recebe o que está em elementos de i
+            }
+            
+            this.elementos = elementosNovos; //Atribundo o elementos ao vetor novo
+        }
+    }
+    
+    
+    //buscar a posição do elemento na posição de índice i 
+    public Object busca(int posicao)
+    {
+     //Se posicao for menor que 0 ou maior ou igual a tamanho, então execute o bloco do if."
+     if(!(posicao >= 0 && posicao < tamanho)) // o "!" significa negado, tem o range de todas as posições n podem ser acessadas
+     {
+         throw new IllegalArgumentException("Posição inválida");
+         //Exceção especial para tipos de argumentos que são inválidos
+     }
+     
+     return this.elementos[posicao];
+    }
+    
+    
+    
+    //Busca sequencial, verificar se  o elemento existe no vetor pela string
+    public int busca(T elemento)
+    {
+        for(int i=0; i < this.tamanho;i++)
+        {                                           //É utilizado o método equals
+            if(this.elementos[i].equals(elemento)) //No Java não existe comparação de string com == 
+            {
+                return i;
+            }
+        }
+        return -1; //Uma posição que não existe
+    }
+    
+    
+    
+    //Exercício 1 - implementar o método de contém
+    public boolean contem(T elemento)
+    {
+        int posicao = busca(elemento);
+        
+        if(posicao > -1)
+        {
+            return true;
+        }
+        
+        return false;
+    }
+    
+    
+    
+    
+    //J B G D E F -> posição a ser removida é o G
+    //0 1 2 3 4 5 -> tamanho é 6
+    //vetor[]
+    public void remover(int posicao)
+    {
+       if(!(posicao >= 0 && posicao < tamanho))  
+       {
+         throw new IllegalArgumentException("Posição inválida");
+       }  
+            for( int i = posicao; i< this.tamanho-1;i++)
+            {
+                this.elementos[i] = this.elementos[i+1];
+            }
+        
+            this.tamanho--;
+    }
+    
+    
+    //Imprimir o tamanho
+    public int tamanho()
+    {
+        return this.tamanho;
+        
+    }
+    
+    //Imprimir todos os elementos do array
+    public String toString()
+    {
+         //Classe específica e apropriada do java para strings
+        StringBuilder s = new StringBuilder();
+        s.append("[ ");
+
+         for (int i = 0; i < this.tamanho; i++)
+        {
+            s.append(this.elementos[i]);
+        
+        if (i < this.tamanho - 1)
+        {
+            s.append(", ");
+        }
+    }
+
+        s.append(" ]");
+        return s.toString();
+        
+        
+     /*
+        append() método Java das classes StringBuilder
+        que acrescenta algum valor a uma sequência atual
+    */
+
+    }
+
+    
+}
