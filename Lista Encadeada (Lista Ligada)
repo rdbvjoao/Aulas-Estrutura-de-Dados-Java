@@ -1,0 +1,130 @@
+public class Main
+{
+	public static void main(String[] args) 
+	{
+        ListaEncadeada lista = new ListaEncadeada<Integer>();
+        
+        lista.adicionar(1);
+        lista.adicionar(2);
+        lista.adicionar(3);
+        lista.adicionar(4);
+
+        System.out.println("Tamanho da lista: "+lista.getTamanho());
+        System.out.println(lista);
+
+	}
+}
+
+
+public class ListaEncadeada<T>
+{
+    private No <T> inicio; //Refencia do inicio
+    private No <T> ultimo; //Referencia para o ultimo nó/elemento
+    private int tamanho = 0;
+    
+    //Ao adicionar algo na lista o que apenas importa é o objeto/valor. O Nó é algo interno
+    public void adicionar(T elemento)
+    {
+        No <T> celula = new No<T>(elemento); //Instanciando o Nó com o elemento
+        
+        if(this.tamanho == 0)
+        {
+            this.inicio = celula;
+        } 
+            else
+            {
+                this.ultimo.setProximo(celula); //O "ultimo" do inicio passa a apontar para a celular
+                // O ultimo passa a apontar para a celula nova
+            }
+        
+        this.ultimo = celula;
+        this.tamanho++; //Adicionar o valor na variável tamanho
+    }
+    
+    public int getTamanho()//Contagem de Nós
+    {
+        return this.tamanho;
+    }
+    
+    
+    public String toString()
+    {
+
+        if(this.tamanho==0)
+        {
+            return "[]";
+        }
+        
+        StringBuilder builder = new StringBuilder("[ ");
+        
+        No <T> atual = this.inicio;
+
+        for(int i =0;i<this.tamanho-1;i++)//tamanho - 1, o for irá para no penultimo elemento
+        {
+            builder.append(atual.getElemento()).append(", ");
+            atual = atual.getProximo();
+        }
+        
+        builder.append(atual.getElemento()).append(" ]");//Imprimindo o último elemento
+        
+        return builder.toString();
+        
+    }
+  
+}
+
+
+public class No <T> //Tipo generico <T>
+{
+    private T elemento;
+    private No <T> proximo;
+    
+    public No (T elemento) 
+    {
+        this.elemento = elemento;
+        this.proximo = null;//Quando instancio um elemento o próximo automaticamente é nulo
+    }
+    
+    //Quando eu sei qual é o meu próximo
+    public No (T elemento, No<T> proximo) //Construtor passando parametros
+    {
+        this.elemento = elemento;
+        this.proximo = proximo;
+    }
+    
+    
+    public T getElemento()
+    {
+        return elemento;
+    }
+    
+
+    public void setElemento(T elemento)
+    {
+        this.elemento = elemento;
+    }
+    
+    
+    public No<T> getProximo()
+    {
+        return proximo;
+    }
+    
+    
+    public void setProximo(No<T>proximo)
+    {
+        this.proximo = proximo;
+    }
+    
+    public String toString()
+    {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Nó [Elemento = ").append(elemento).append
+        (", Próximo = ").append(proximo).append("]");
+        
+        return builder.toString();
+    }
+    
+}
+
+
